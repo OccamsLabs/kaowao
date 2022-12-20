@@ -38,6 +38,11 @@ to quickly create a Cobra application.`,
 	},
 }
 
+type ConfigFile struct {
+  RepoUrl string `yaml:"repo_url"`
+  Files []FileHash `yaml:"files"`
+}
+
 type FileHash struct {
 	Path string `yaml:"path"`
 	Hash string `yaml:"hash"`
@@ -48,6 +53,7 @@ type FileHash struct {
 func scan(directory string, outFile string) {
 
   var fileHashes []FileHash
+  var configFile ConfigFile
 
   // Open the output file for writing
 	f, err := os.OpenFile(outFile, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
@@ -90,7 +96,9 @@ func scan(directory string, outFile string) {
 	}
 
 	// Marshal the slice of FileHash structs to YAML
-	yamlBytes, err := yaml.Marshal(fileHashes)
+
+  configFile.Files = fileHashes
+	yamlBytes, err := yaml.Marshal(configFile)
 	if err != nil {
 		fmt.Printf("Error marshalling to YAML: %v\n", err)
 		os.Exit(1)
