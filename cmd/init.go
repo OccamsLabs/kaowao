@@ -1,20 +1,18 @@
 /*
    Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
-  "crypto/sha256"
+	"crypto/sha256"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"gopkg.in/yaml.v2"
 
 	"github.com/spf13/cobra"
+	"github.com/OccamsLabs/kaowao/pkg/config"
 )
-
 
 
 
@@ -28,34 +26,24 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-  Args:  cobra.ExactArgs(2),
+	Args:  cobra.ExactArgs(2),
 
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("init called")
-    directory := args[0]
-    outFile := args[1]
-    scan(directory, outFile)
+		directory := args[0]
+		outFile := args[1]
+		scan(directory, outFile)
 	},
 }
-
-type ConfigFile struct {
-  RepoUrl string `yaml:"repo_url"`
-  Files []FileHash `yaml:"files"`
-}
-
-type FileHash struct {
-	Path string `yaml:"path"`
-	Hash string `yaml:"hash"`
-}
-
 
 
 func scan(directory string, outFile string) {
 
-  var fileHashes []FileHash
-  var configFile ConfigFile
+	var fileHashes []config.FileHash
+	var configFile config.ConfigFile
+	configFile.Version = 1
 
-  // Open the output file for writing
+	// Open the output file for writing
 	f, err := os.OpenFile(outFile, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
 	if err != nil {
 		fmt.Printf("Error opening output file: %v\n", err)
@@ -63,7 +51,7 @@ func scan(directory string, outFile string) {
 	}
 	defer f.Close()
 
-  // Iterate through all files in the directory
+	// Iterate through all files in the directory
 	err = filepath.Walk(directory, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {
 			return nil
@@ -79,10 +67,10 @@ func scan(directory string, outFile string) {
 		// Compute the SHA256 hash of the file contents
 		hash := sha256.Sum256(contents)
 
-    newHash := fmt.Sprintf("%x",hash)
+		newHash := fmt.Sprintf("%x",hash)
 
 		// Create a FileHash struct and append it to the slice
-		fileHashes = append(fileHashes, FileHash{
+		fileHashes = append(fileHashes, config.FileHash{
 			Path: path,
 			Hash: newHash,
 		})
@@ -97,19 +85,9 @@ func scan(directory string, outFile string) {
 
 	// Marshal the slice of FileHash structs to YAML
 
-  configFile.Files = fileHashes
-	yamlBytes, err := yaml.Marshal(configFile)
-	if err != nil {
-		fmt.Printf("Error marshalling to YAML: %v\n", err)
-		os.Exit(1)
-	}
+	configFile.Files = fileHashes
+	config.WriteConfig(outFile, configFile)
 
-	// Write the YAML to the output file
-	err = ioutil.WriteFile(outFile, yamlBytes, 0644)
-	if err != nil {
-		fmt.Printf("Error writing to output file: %v\n", err)
-		os.Exit(1)
-	}
 }
 
 func init() {
