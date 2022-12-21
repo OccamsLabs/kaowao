@@ -36,17 +36,16 @@ to quickly create a Cobra application.`,
 func scanPath(configFilePath string) {
 	configFile, err := config.ReadConfig(configFilePath)
 	if err != nil {
-		fmt.Println("error opening config file %s", configFilePath)
+		fmt.Printf("error opening config file %s\n", configFilePath)
 		os.Exit(1)
 	}
 
 	targets := configFile.Files
 	for _, v := range targets {
-		fmt.Println(v.Path)
 		result, err := hashutils.HashForFile(v.Path)
 
 		if err != nil {
-			fmt.Println("error hashing file: %s", v.Path)
+			fmt.Printf("error hashing file: %s\n", v.Path)
 		}
 
 		if result != v.Hash {
