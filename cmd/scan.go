@@ -34,7 +34,7 @@ to quickly create a Cobra application.`,
 }
 
 func scanPath(configFilePath string) {
-	var results []result.ResultInfo
+	results := []result.ResultInfo{}
 	var out result.ResultInfos
 
 	configFile, err := config.ReadConfig(configFilePath)
@@ -67,7 +67,7 @@ func scanPath(configFilePath string) {
 			})
 		}
 	}
-	out.ScanTime = time.Now().String()
+	out.ScanTime = time.Now().Format(time.RFC3339)
 	out.Results = results
 	report, _ := result.ToJson(out)
 	fmt.Printf("%s\n", report)

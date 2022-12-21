@@ -1,0 +1,13 @@
+#+title: Tasks
+
+* TODO create add command
+./kaowao add file to_config.yaml
+
+creates a hash of the file and adds it to the list
+
+* TODO Create github action that uses the script/binary
+:LOGBOOK:
+- State "TODO"       from              [2022-12-21 Wed 09:58]
+:END:
+
+- docker vs non docker

@@ -57,7 +57,7 @@ func scan(directory string, outFile string) {
 		result, err := hashutils.HashForFile(path)
 
 		if err != nil {
-			fmt.Printf("error hashing file: %s\n", path)
+			fmt.Printf("error hashing file: %s, %s\n", path, err)
 		}
 
 		// Create a FileHash struct and append it to the slice
