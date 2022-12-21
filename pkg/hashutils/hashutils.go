@@ -1,11 +1,10 @@
 package hashutils
 
 import (
-	"fmt"
 	"crypto/sha256"
+	"fmt"
 	"io/ioutil"
 )
-
 
 func HashForFile(path string) (string, error) {
 	contents, err := ioutil.ReadFile(path)
@@ -13,10 +12,9 @@ func HashForFile(path string) (string, error) {
 		return "", err
 	}
 
-
 	// Compute the SHA256 hash of the file contents
 	hash := sha256.Sum256(contents)
 
-	newHash := fmt.Sprintf("%x",hash)
+	newHash := fmt.Sprintf("%x", hash)
 	return newHash, nil
 }

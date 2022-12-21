@@ -8,7 +8,7 @@ build:
 	go build .
 
 run:
-	go run ./main.go
+	go run ./main.go 
 
 test:
 	go test ./...
@@ -21,6 +21,9 @@ lint:
 
 gosec:
 	docker run --rm -it -v $(PWD):/app -w /app securego/gosec:latest ./...
+
+fmt:
+	gofmt -w -s .
 
 ci: lint gosec test build
 

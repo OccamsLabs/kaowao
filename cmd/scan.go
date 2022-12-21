@@ -51,7 +51,7 @@ func scanPath(configFilePath string) {
 			fmt.Printf("error hashing file: %s\n", v.Path)
 
 			results = append(results, result.ResultInfo{
-				Path: v.Path,
+				Path:    v.Path,
 				Message: fmt.Sprintf("error hashing: %", err),
 			})
 		}
@@ -60,16 +60,16 @@ func scanPath(configFilePath string) {
 			fmt.Printf("Hashes do not match: %s %s %s\n", v.Path, v.Hash, resultHash)
 
 			results = append(results, result.ResultInfo{
-				Path: v.Path,
-				Message: fmt.Sprintf("Hashes do not match: %s %s %s", v.Path, v.Hash, resultHash),
-				Hash: v.Hash,
+				Path:         v.Path,
+				Message:      fmt.Sprintf("Hashes do not match: %s %s %s", v.Path, v.Hash, resultHash),
+				Hash:         v.Hash,
 				ExpectedHash: resultHash,
 			})
 		}
 	}
 	out.ScanTime = time.Now().String()
 	out.Results = results
-	report, _  := result.ToJson(out)
+	report, _ := result.ToJson(out)
 	fmt.Printf("%s\n", report)
 }
 
