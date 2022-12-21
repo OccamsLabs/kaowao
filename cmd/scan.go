@@ -52,7 +52,7 @@ func scanPath(configFilePath string) {
 
 			results = append(results, result.ResultInfo{
 				Path:    v.Path,
-				Message: fmt.Sprintf("error hashing: %", err),
+				Message: fmt.Sprintf("error hashing: %s", err),
 			})
 		}
 
