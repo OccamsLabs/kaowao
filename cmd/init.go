@@ -4,14 +4,13 @@
 package cmd
 
 import (
-	"crypto/sha256"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 
 	"github.com/spf13/cobra"
 	"github.com/OccamsLabs/kaowao/pkg/config"
+	"github.com/OccamsLabs/kaowao/pkg/hashutils"
 )
 
 
@@ -58,21 +57,16 @@ func scan(directory string, outFile string) {
 		}
 
 		// Read the file contents
-		contents, err := ioutil.ReadFile(path)
+		result, err := hashutils.HashForFile(path)
+
 		if err != nil {
-			return err
+			fmt.Println("error hashing file: %s", path)
 		}
-
-
-		// Compute the SHA256 hash of the file contents
-		hash := sha256.Sum256(contents)
-
-		newHash := fmt.Sprintf("%x",hash)
 
 		// Create a FileHash struct and append it to the slice
 		fileHashes = append(fileHashes, config.FileHash{
 			Path: path,
-			Hash: newHash,
+			Hash: result,
 		})
 
 		return nil
