@@ -71,6 +71,10 @@ func scanPath(configFilePath string) {
 	out.Results = results
 	report, _ := result.ToJson(out)
 	fmt.Printf("%s\n", report)
+
+	if len(results) != 0 {
+		os.Exit(1)
+	}
 }
 
 func init() {
