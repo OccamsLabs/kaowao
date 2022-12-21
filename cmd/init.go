@@ -1,5 +1,5 @@
 /*
-   Copyright © 2022 NAME HERE <EMAIL ADDRESS>
+Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 */
 package cmd
 
@@ -8,12 +8,10 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/spf13/cobra"
 	"github.com/OccamsLabs/kaowao/pkg/config"
 	"github.com/OccamsLabs/kaowao/pkg/hashutils"
+	"github.com/spf13/cobra"
 )
-
-
 
 // initCmd represents the init command
 var initCmd = &cobra.Command{
@@ -25,7 +23,7 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-	Args:  cobra.ExactArgs(2),
+	Args: cobra.ExactArgs(2),
 
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("init called")
@@ -34,7 +32,6 @@ to quickly create a Cobra application.`,
 		scan(directory, outFile)
 	},
 }
-
 
 func scan(directory string, outFile string) {
 

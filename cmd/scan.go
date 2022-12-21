@@ -1,16 +1,17 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
 	"fmt"
 
-	"github.com/spf13/cobra"
 	"github.com/OccamsLabs/kaowao/pkg/config"
-	"os"
 	"github.com/OccamsLabs/kaowao/pkg/hashutils"
+	"github.com/OccamsLabs/kaowao/pkg/result"
+	"github.com/spf13/cobra"
+	"os"
+	"time"
 )
 
 // scanCmd represents the scan command
@@ -23,7 +24,7 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-	Args:  cobra.ExactArgs(1),
+	Args: cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("scan called")
 		configFile := args[0]
@@ -32,8 +33,10 @@ to quickly create a Cobra application.`,
 	},
 }
 
-
 func scanPath(configFilePath string) {
+	var results []result.ResultInfo
+	var out result.ResultInfos
+
 	configFile, err := config.ReadConfig(configFilePath)
 	if err != nil {
 		fmt.Printf("error opening config file %s\n", configFilePath)
@@ -42,18 +45,34 @@ func scanPath(configFilePath string) {
 
 	targets := configFile.Files
 	for _, v := range targets {
-		result, err := hashutils.HashForFile(v.Path)
+		resultHash, err := hashutils.HashForFile(v.Path)
 
 		if err != nil {
 			fmt.Printf("error hashing file: %s\n", v.Path)
+
+			results = append(results, result.ResultInfo{
+				Path: v.Path,
+				Message: fmt.Sprintf("error hashing: %", err),
+			})
 		}
 
-		if result != v.Hash {
-			fmt.Printf("Hashes do not match: %s %s %s/n", v.Path, v.Hash, result)
+		if resultHash != v.Hash {
+			fmt.Printf("Hashes do not match: %s %s %s\n", v.Path, v.Hash, resultHash)
+
+			results = append(results, result.ResultInfo{
+				Path: v.Path,
+				Message: fmt.Sprintf("Hashes do not match: %s %s %s", v.Path, v.Hash, resultHash),
+				Hash: v.Hash,
+				ExpectedHash: resultHash,
+			})
 		}
 	}
-
+	out.ScanTime = time.Now().String()
+	out.Results = results
+	report, _  := result.ToJson(out)
+	fmt.Printf("%s\n", report)
 }
+
 func init() {
 	rootCmd.AddCommand(scanCmd)
 

@@ -1,16 +1,16 @@
 package config
 
 import (
-	"io/ioutil"
-	"gopkg.in/yaml.v2"
 	"fmt"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
 	"os"
 )
 
 type ConfigFile struct {
-	Version int `yaml:"version"`
-	RepoUrl string `yaml:"repo_url"`
-	Files []FileHash `yaml:"files"`
+	Version int        `yaml:"version"`
+	RepoUrl string     `yaml:"repo_url"`
+	Files   []FileHash `yaml:"files"`
 }
 
 type FileHash struct {
@@ -28,12 +28,11 @@ func ReadConfig(filename string) (*ConfigFile, error) {
 	err = yaml.Unmarshal(buf, c)
 
 	if err != nil {
-        return nil, fmt.Errorf("in file %q: %w", filename, err)
-    }
+		return nil, fmt.Errorf("in file %q: %w", filename, err)
+	}
 
-    return c, err
+	return c, err
 }
-
 
 func WriteConfig(filename string, config ConfigFile) {
 	yamlBytes, err := yaml.Marshal(config)
