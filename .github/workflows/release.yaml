@@ -36,11 +36,11 @@ jobs:
       #   with:
       #     username: ${{secrets.DOCKER_USERNAME}}
       #     password: ${{secrets.DOCKER_PASSWORD}}
-      - name: Generate SBOM
-        uses: CycloneDX/gh-gomod-generate-sbom@v1
-        with:
-          version: v1
-          args: mod -licenses -json -output bom.json
+      # - name: Generate SBOM
+      #   uses: CycloneDX/gh-gomod-generate-sbom@v1
+      #   with:
+      #     version: v1
+      #     args: mod -licenses -json -output bom.json
       # - name: Docker meta
       #   uses: docker/metadata-action@v4
       #   id: meta
