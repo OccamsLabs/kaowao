@@ -34,7 +34,6 @@ to quickly create a Cobra application.`,
 }
 
 func scan(directory string, outFile string) {
-
 	var fileHashes []config.FileHash
 	var configFile config.ConfigFile
 	configFile.Version = 1
