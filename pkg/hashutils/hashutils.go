@@ -19,7 +19,7 @@ func HashForFile(path string) (string, error) {
 	return newHash, nil
 }
 
-func SaltedHashFroFile(path string, salt string) (string, error) {
+func SaltedHashForFile(path string, salt string) (string, error) {
 	hashForFile, err := HashForFile(path)
 	if err != nil {
 		return "", err
