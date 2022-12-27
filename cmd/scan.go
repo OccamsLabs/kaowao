@@ -45,7 +45,17 @@ func scanPath(configFilePath string) {
 
 	targets := configFile.Files
 	for _, v := range targets {
-		resultHash, err := hashutils.HashForFile(v.Path)
+		var resultHash string
+		var err error
+
+		salt := os.Getenv("KAOWAO_SALT")
+
+		if salt != "" {
+			resultHash, err = hashutils.SaltedHashForFile(v.Path, salt)
+		} else {
+			// Read the file contents
+			resultHash, err = hashutils.HashForFile(v.Path)
+		}
 
 		if err != nil {
 			fmt.Printf("error hashing file: %s\n", v.Path)

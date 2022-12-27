@@ -27,4 +27,11 @@ fmt:
 
 ci: lint gosec test build
 
+
+build-docker:
+	docker build -t kaowao:latest .
+
+
+testrun-docker:
+	sh -c "docker run --rm -it --env KAOWAO_SALT=12345  -v $(PWD):/data kaowao:latest scan test2.yaml"
 # end

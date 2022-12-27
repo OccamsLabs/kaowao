@@ -34,7 +34,6 @@ to quickly create a Cobra application.`,
 }
 
 func scan(directory string, outFile string) {
-
 	var fileHashes []config.FileHash
 	var configFile config.ConfigFile
 	configFile.Version = 1
@@ -53,8 +52,14 @@ func scan(directory string, outFile string) {
 			return nil
 		}
 
-		// Read the file contents
-		result, err := hashutils.HashForFile(path)
+		var result string
+		salt := os.Getenv("KAOWAO_SALT")
+		if salt != "" {
+			result, err = hashutils.SaltedHashForFile(path, salt)
+		} else {
+			// Read the file contents
+			result, err = hashutils.HashForFile(path)
+		}
 
 		if err != nil {
 			fmt.Printf("error hashing file: %s, %s\n", path, err)

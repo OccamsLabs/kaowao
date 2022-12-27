@@ -18,3 +18,16 @@ func HashForFile(path string) (string, error) {
 	newHash := fmt.Sprintf("%x", hash)
 	return newHash, nil
 }
+
+func SaltedHashForFile(path string, salt string) (string, error) {
+	hashForFile, err := HashForFile(path)
+	if err != nil {
+		return "", err
+	}
+	saltedHash := fmt.Sprintf("%s_%s", hashForFile, salt)
+
+	newSaltedHash := sha256.Sum256([]byte(saltedHash))
+
+	newHash := fmt.Sprintf("%x", newSaltedHash)
+	return newHash, nil
+}
