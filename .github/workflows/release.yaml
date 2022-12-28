@@ -54,13 +54,13 @@ jobs:
           tags: |
             type=sha,format=long
             type=semver,pattern={{version}}
-      - name: Release Binaries
-        uses: goreleaser/goreleaser-action@v3
-        with:
-          version: latest
-          args: release --rm-dist
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      # - name: Release Binaries
+      #   uses: goreleaser/goreleaser-action@v3
+      #   with:
+      #     version: latest
+      #     args: release --rm-dist
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # COSIGN_PASSWORD: ${{secrets.COSIGN_PASSWORD}}
       - name: Release Docker Image
         uses: docker/build-push-action@v3
