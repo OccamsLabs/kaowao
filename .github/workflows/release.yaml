@@ -6,10 +6,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     env:
       GO111MODULE: on
       ACTIONS_ALLOW_UNSECURE_COMMANDS: true
       REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository }}
+
 
     steps:
       - name: Checkout Source
@@ -43,7 +48,7 @@ jobs:
         uses: docker/metadata-action@v4
         id: meta
         with:
-          images: securego/gosec
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           flavor: |
             latest=true
           tags: |
