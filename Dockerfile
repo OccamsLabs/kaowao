@@ -21,9 +21,10 @@ RUN make build
 # Start fresh from a smaller image
 
 FROM golang:1.19-alpine
+RUN apk add --no-cache bash
 
 COPY --from=builder /app/kaowao /bin/kaowao
+COPY entrypoint.sh /bin/entrypoint.sh
+RUN chmod +x /bin/entrypoint.sh
 
-WORKDIR /data
-
-ENTRYPOINT ["kaowao"]
+ENTRYPOINT ["/bin/entrypoint.sh"]
