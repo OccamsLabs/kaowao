@@ -15,15 +15,15 @@ import (
 // addCmd represents the init command
 var addCmd = &cobra.Command{
 	Use:   "add",
-	Short: "Adds a file to a config file: kaowao file.go config.yaml",
-	Long: `Adds a file to a config file: kaowao file.go config.yaml.
+	Short: "Adds a file to a config file: kaowao config.yaml file.go",
+	Long: `Adds a file to a config file: kaowao config.yaml file.go.
 Accepts KAOWAO_SALT to hash the checksums and prevent tampering`,
 	Args: cobra.ExactArgs(2),
 
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("add called")
-		file := args[0]
-		outFile := args[1]
+		outFile := args[0]
+		file := args[1]
 		add(file, outFile)
 	},
 }

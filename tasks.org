@@ -1,12 +1,20 @@
 #+title: Tasks
 
-* TODO create add command
+* WIP create add command
+:LOGBOOK:
+- State "WIP"        from "TODO"       [2022-12-29 Thu 08:06]
+- State "TODO"       from "DONE"       [2022-12-29 Thu 08:06]
+- State "DONE"       from "DONE"       [2022-12-29 Thu 08:06]
+- State "DONE"       from "TODO"       [2022-12-29 Thu 08:05]
+:END:
 ./kaowao add file to_config.yaml
 
 creates a hash of the file and adds it to the list
+-> should be kaowao add to_config.yaml file.c for better scriptability
 
-* TODO Create github action that uses the script/binary
+* DONE Create github action that uses the script/binary
 :LOGBOOK:
+- State "DONE"       from "TODO"       [2022-12-29 Thu 08:05]
 - State "TODO"       from              [2022-12-21 Wed 09:58]
 :END:
 
