@@ -28,8 +28,7 @@ Accepts KAOWAO_SALT to hash the checksums and prevent tampering`,
 	},
 }
 
-func add(targetFile string, configFilePath string) {
-
+func add(targetPath string, configFilePath string) {
 	configFile, err := config.ReadConfig(configFilePath)
 	if err != nil {
 		fmt.Printf("error opening config file %s\n", configFilePath)
@@ -38,37 +37,33 @@ func add(targetFile string, configFilePath string) {
 
 	fileHashes := configFile.Files
 
-	var result string
-	salt := os.Getenv("KAOWAO_SALT")
-	if salt != "" {
-		result, err = hashutils.SaltedHashForFile(targetFile, salt)
-	} else {
-		// Read the file contents
-		result, err = hashutils.HashForFile(targetFile)
-	}
+	newFileHashes, err := hashutils.HashTarget(targetPath)
 
 	if err != nil {
-		fmt.Printf("error hashing file: %s, %s\n", targetFile, err)
+		fmt.Printf("Error iterating through files: %v\n", err)
+		os.Exit(1)
 	}
-
-	idx := -1
-	for i := range fileHashes {
-		if fileHashes[i].Path == targetFile {
-			idx = i
-		}
-	}
-
-	if idx != -1 {
-		fileHashes[idx] = config.FileHash{
-			Path: targetFile,
-			Hash: result,
+	for _, h := range newFileHashes {
+		idx := -1
+		for i := range fileHashes {
+			if fileHashes[i].Path == h.Path {
+				idx = i
+				break
+			}
 		}
 
-	} else {
-		fileHashes = append(fileHashes, config.FileHash{
-			Path: targetFile,
-			Hash: result,
-		})
+		if idx != -1 {
+			fileHashes[idx] = config.FileHash{
+				Path: h.Path,
+				Hash: h.Hash,
+			}
+
+		} else {
+			fileHashes = append(fileHashes, config.FileHash{
+				Path: h.Path,
+				Hash: h.Hash,
+			})
+		}
 
 	}
 

@@ -1,7 +1,8 @@
 #+title: Tasks
 
-* WIP create add command
+* DONE create add command
 :LOGBOOK:
+- State "DONE"       from "WIP"        [2022-12-29 Thu 11:48]
 - State "WIP"        from "TODO"       [2022-12-29 Thu 08:06]
 - State "TODO"       from "DONE"       [2022-12-29 Thu 08:06]
 - State "DONE"       from "DONE"       [2022-12-29 Thu 08:06]
@@ -19,3 +20,16 @@ creates a hash of the file and adds it to the list
 :END:
 
 - docker vs non docker
+
+* TODO Add sync command
+:LOGBOOK:
+- State "TODO"       from              [2022-12-29 Thu 11:48]
+:END:
+The sync command scans existing entries in the config file and updates their hashes if they changed.
+
+* TODO Bug: when using add with a non existent file, you end up with an empty hash in the entry
+:LOGBOOK:
+- State "TODO"       from              [2022-12-29 Thu 12:02]
+:END:
+
+There should be no entry at all
