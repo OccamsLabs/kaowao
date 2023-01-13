@@ -12,23 +12,23 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// addCmd represents the init command
-var addCmd = &cobra.Command{
-	Use:   "add",
-	Short: "Adds a file to a config file: kaowao config.yaml file.go",
-	Long: `Adds a file to a config file: kaowao config.yaml file.go.
+// syncCmd represents the init command
+var syncCmd = &cobra.Command{
+	Use:   "sync",
+	Short: "Sync a config file: kaowao config.yaml",
+	Long: `Sync a config file: kaowao config.yaml.
 Accepts KAOWAO_SALT to hash the checksums and prevent tampering`,
-	Args: cobra.ExactArgs(2),
+	Args: cobra.ExactArgs(1),
 
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("add called")
-		outFile := args[0]
-		file := args[1]
-		add(file, outFile)
+		fmt.Println("sync called")
+		configFile := args[0]
+
+		sync(configFile)
 	},
 }
 
-func add(targetPath string, configFilePath string) {
+func sync(configFilePath string) {
 	configFile, err := config.ReadConfig(configFilePath)
 	if err != nil {
 		fmt.Printf("error opening config file %s\n", configFilePath)
@@ -37,12 +37,22 @@ func add(targetPath string, configFilePath string) {
 
 	fileHashes := configFile.Files
 
-	newFileHashes, err := hashutils.HashTarget(targetPath)
+	var newFileHashes []config.FileHash
 
-	if err != nil {
-		fmt.Printf("Error iterating through files: %v\n", err)
-		os.Exit(1)
+	for _, value := range fileHashes {
+		targetPath := value.Path
+		if targetPath != "" {
+			newFileHash, err := hashutils.HashTarget(targetPath)
+			if err != nil {
+				fmt.Printf("Error iterating through files: %v\n", err)
+				os.Exit(1)
+			}
+			newFileHashes = append(newFileHashes, newFileHash...)
+		}
 	}
+
+
+
 	for _, h := range newFileHashes {
 		idx := -1
 		for i := range fileHashes {
@@ -60,7 +70,6 @@ func add(targetPath string, configFilePath string) {
 				Path: h.Path,
 				Hash: h.Hash,
 			}
-
 		} else {
 			fileHashes = append(fileHashes, config.FileHash{
 				Path: h.Path,
@@ -80,5 +89,5 @@ func add(targetPath string, configFilePath string) {
 }
 
 func init() {
-	rootCmd.AddCommand(addCmd)
+	rootCmd.AddCommand(syncCmd)
 }
