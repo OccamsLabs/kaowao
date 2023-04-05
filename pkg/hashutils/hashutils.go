@@ -36,6 +36,10 @@ func SaltedHashForFile(path string, salt string) (string, error) {
 }
 
 func HashTarget(target string) ([]config.FileHash, error) {
+	if _, err := os.Stat(target); err != nil {
+		return nil, err
+	}
+
 	var fileHashes []config.FileHash
 	err := filepath.Walk(target, func(path string, info os.FileInfo, err error) error {
 		if info.IsDir() {

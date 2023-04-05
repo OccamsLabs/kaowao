@@ -1,5 +1,5 @@
 /*
-Copyright © 2022 Andreas Tiefenthaler <contact@occamslabs.com>
+   Copyright © 2022 Andreas Tiefenthaler <contact@occamslabs.com>
 */
 package cmd
 
@@ -44,14 +44,17 @@ func sync(configFilePath string) {
 		if targetPath != "" {
 			newFileHash, err := hashutils.HashTarget(targetPath)
 			if err != nil {
-				fmt.Printf("Error iterating through files: %v\n", err)
-				os.Exit(1)
+				fmt.Printf("Error iterating through files: %v, removing \n", err)
+				// remove files that errored out
+				// append a filehash with empty hash value
+				// sort out in the next step
+				deleteHash := config.FileHash{Path: targetPath, Hash: ""}
+				newFileHashes = append(newFileHashes, deleteHash)
+			} else {
+				newFileHashes = append(newFileHashes, newFileHash...)
 			}
-			newFileHashes = append(newFileHashes, newFileHash...)
 		}
 	}
-
-
 
 	for _, h := range newFileHashes {
 		idx := -1
@@ -63,13 +66,16 @@ func sync(configFilePath string) {
 		}
 
 		if idx != -1 {
-			if fileHashes[idx].Hash != h.Hash {
+			if h.Hash == "" {
+				fileHashes = append(fileHashes[:idx], fileHashes[idx+1:]...)
+			} else if fileHashes[idx].Hash != h.Hash {
 				fmt.Printf("updating: %s\n", h.Path)
+				fileHashes[idx] = config.FileHash{
+					Path: h.Path,
+					Hash: h.Hash,
+				}
 			}
-			fileHashes[idx] = config.FileHash{
-				Path: h.Path,
-				Hash: h.Hash,
-			}
+
 		} else {
 			fileHashes = append(fileHashes, config.FileHash{
 				Path: h.Path,
